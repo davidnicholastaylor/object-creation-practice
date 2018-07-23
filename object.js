@@ -1,4 +1,4 @@
-let financialAdvisor = Object.create({}, {
+let financial = Object.create({}, {
     company: {
         value: "IBM",
         enumerable: true,
@@ -14,28 +14,86 @@ let financialAdvisor = Object.create({}, {
         enumerable: true
     },
     portfolio: {
-        value: [
-            "45", "54", "314", "98"
-        ]
-    },
-    worth: {
-        method: function netWorth() {
-            for (i = 0; i < portfolio.length; i++)  {
-                return `${this.portfolio.value[i]++}`
-            }
-        }
+        value: [],
+        enumerable: false
     },
     purchase: {
-        method: function (ticker, quantity, price) {
-            portfolio += quantity * price;
-
-        }
+        value: function (symbol, quantity, price) {
+            let purchased = {
+                company: symbol,
+                quantity: quantity,
+                price: price
+            }
+            this.portfolio.push(purchased)
+        },
+        enumerable: false
     },
     sell: {
-        method: function (ticker, quantity, price) {
-            portfolio - portfolio.value
-        }
+        value: function (symbol, quantity, price) {
+            let portfolio = financial.portfolio;
+            // console.log("before loop portfolio", portfolio);
+            for(let i = 0; i < portfolio.length; i++) {
+                if(portfolio[i].company === symbol && portfolio[i].quantity === quantity && portfolio[i].price === price) {
+                    portfolio.splice(i, 1);
+                    // console.log("after loop", portfolio);
+                }
+            }
+        },
+        // value: function(symbol, quantity, price){
+
+        //     let findStock = this.portfolio.find(stock => {
+        //         return stock.symbol === symbol && stock.sold === false;
+        //     })
+            
+        //     if(findStock.quantity < quantity){
+        //         alert(`You do not have that much stock in ${symbol}!`);
+        //     }else{
+        //         let index = this.portfolio.indexOf(findStock);
+    
+        //         this.portfolio.splice(index, 1);
+    
+        //         let soldStock = {
+        //             symbol: symbol,
+        //             quantity: quantity,
+        //             price: price,
+        //             sold: true
+        //         }
+    
+        //         let updatedStock = {
+        //             symbol: findStock.symbol,
+        //             quantity: findStock.quantity - soldStock.quantity,
+        //             price: soldStock.price,
+        //             sold: false
+        //         }
+    
+        //         this.portfolio.push(soldStock, updatedStock);
+        //     }
+
+        // },
+        enumerable: false
+    },
+    worth: {
+        value: function() {
+            let total = 0;
+            for (i = 0; i < this.portfolio.length; i++) {
+                let stockValue = this.portfolio[i].quantity * this.portfolio[i].price;
+                total += stockValue;
+            }
+            console.log("total", total);
+            return total;
+        },
+        // value:function(){
+        //     let worth = this.portfolio.reduce((accumulator, stock) => {
+        //         return accumulator + (stock.price * stock.quantity);
+        //     }, 0);
+        //     return worth;
+        // },
+        enumerable: false
     }
 })
 
-console.log(financialAdvisor.worth);
+financial.purchase("SBUX", 100, 55);
+financial.purchase("AAPL", 200, 105);
+financial.sell("SBUX", 50, 55);
+console.log(financial);
+financial.worth();
