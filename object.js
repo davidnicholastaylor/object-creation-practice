@@ -5,7 +5,7 @@ let financial = Object.create({}, {
         writable: true
     },
     specialty: {
-        value: "Accounting",
+        value: "accounting",
         enumerable: true,
         writable: true
     },
@@ -97,3 +97,30 @@ financial.purchase("AAPL", 200, 105);
 financial.sell("SBUX", 50, 55);
 console.log(financial);
 financial.worth();
+
+
+// Challenge Part 1
+const listText = document.createElement("ul")
+const text = document.createTextNode(`${financial.name} works for ${financial.company}, specializing in ${financial.specialty}.`)
+listText.appendChild(text)
+document.body.appendChild(listText)
+
+//Challenge Part 2
+
+let fragment = document.createDocumentFragment();
+console.log(financial.portfolio)
+let list = document.createElement('ul')
+for (i = 0; i < financial.portfolio.length; i++) {
+    const currentObject = financial.portfolio[i];
+    let listItem = document.createElement('li')
+    listItem.textContent = `${currentObject.company} `
+    listItem.textContent += `${currentObject.price} `
+    listItem.textContent += `${currentObject.quantity}`
+    list.appendChild(listItem)
+    console.log(list)
+}
+fragment.appendChild(list)
+
+console.log(fragment)
+
+document.querySelector(".up").appendChild(fragment)
